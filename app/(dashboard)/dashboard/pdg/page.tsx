@@ -266,18 +266,19 @@ export default function PDGDashboard() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-red-200 bg-red-50/50">
+        {/* Corrections d'Opérations */}
+        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-red-200 bg-red-50/50 dark:border-red-800/50 dark:bg-red-950/20">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <Edit3 className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
-              <CardTitle className="text-sm sm:text-lg text-red-700">Corrections d'Opérations</CardTitle>
+              <Edit3 className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-400" />
+              <CardTitle className="text-sm sm:text-lg text-red-700 dark:text-red-300">Corrections d'Opérations</CardTitle>
             </div>
-            <CardDescription className="text-xs sm:text-sm">
+            <CardDescription className="text-xs sm:text-sm text-red-600/80 dark:text-red-400/80">
               2 opérations nécessitent une correction PDG (droit exclusif)
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button variant="destructive" className="w-full text-xs sm:text-sm" asChild>
+            <Button variant="destructive" className="w-full text-xs sm:text-sm bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600" asChild>
               <a href="/dashboard/pdg/operations">
                 <Shield className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                 Corriger les opérations
@@ -286,16 +287,19 @@ export default function PDGDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-blue-200 bg-blue-50/50">
+        {/* Validation Concepteurs */}
+        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-blue-200 bg-blue-50/50 dark:border-blue-800/50 dark:bg-blue-950/20">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-lg text-blue-700">Validation Concepteurs</CardTitle>
+              <CheckCircle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <CardTitle className="text-lg text-blue-700 dark:text-blue-300">Validation Concepteurs</CardTitle>
             </div>
-            <CardDescription>3 demandes de compte concepteur nécessitent votre validation finale</CardDescription>
+            <CardDescription className="text-blue-600/80 dark:text-blue-400/80">
+              3 demandes de compte concepteur nécessitent votre validation finale
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600" asChild>
               <a href="/dashboard/pdg/utilisateurs">
                 <UserPlus className="mr-2 h-4 w-4" />
                 Valider les comptes
@@ -304,32 +308,38 @@ export default function PDGDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-green-200 bg-green-50/50">
+        {/* Paiements Droits */}
+        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-green-200 bg-green-50/50 dark:border-green-800/50 dark:bg-green-950/20">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-green-600" />
-              <CardTitle className="text-lg text-green-700">Paiements Droits</CardTitle>
+              <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <CardTitle className="text-lg text-green-700 dark:text-green-300">Paiements Droits</CardTitle>
             </div>
-            <CardDescription>8 paiements de droits d'auteur en attente de validation</CardDescription>
+            <CardDescription className="text-green-600/80 dark:text-green-400/80">
+              8 paiements de droits d'auteur en attente de validation
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button className="w-full bg-green-600 hover:bg-green-700">
+            <Button className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600">
               <DollarSign className="mr-2 h-4 w-4" />
               Traiter les paiements
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-purple-200 bg-purple-50/50">
+        {/* Paramètres Système */}
+        <Card className="cursor-pointer transition-all hover:shadow-md hover:scale-105 border-purple-200 bg-purple-50/50 dark:border-purple-800/50 dark:bg-purple-950/20">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <Settings className="h-5 w-5 text-purple-600" />
-              <CardTitle className="text-lg text-purple-700">Paramètres Système</CardTitle>
+              <Settings className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <CardTitle className="text-lg text-purple-700 dark:text-purple-300">Paramètres Système</CardTitle>
             </div>
-            <CardDescription>Configuration des taux de royalties et paramètres généraux</CardDescription>
+            <CardDescription className="text-purple-600/80 dark:text-purple-400/80">
+              Configuration des taux de royalties et paramètres généraux
+            </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button className="w-full bg-purple-600 hover:bg-purple-700">
+            <Button className="w-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600">
               <Settings className="mr-2 h-4 w-4" />
               Configurer
             </Button>
