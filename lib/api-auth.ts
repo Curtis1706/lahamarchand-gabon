@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/lib/better-auth"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/lib/auth"
 
 export async function withAuth(
   request: NextRequest,
   handler: (request: NextRequest, user: any) => Promise<NextResponse>
 ) {
   try {
-    // Utiliser Better Auth pour vérifier la session
-    const session = await auth.api.getSession({
-      headers: request.headers
-    })
+    // Utiliser NextAuth pour vérifier la session
+    const session = await getServerSession(authOptions)
 
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
