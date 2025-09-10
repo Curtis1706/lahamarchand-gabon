@@ -106,22 +106,6 @@ const accountTypes = [
     validation: "Accès restreint",
     validationIcon: Shield,
     validationColor: "text-red-600"
-  },
-  {
-    id: "pdg",
-    title: "PDG",
-    description: "Administration complète",
-    icon: Building2,
-    color: "bg-gray-800",
-    features: [
-      "Administration complète",
-      "Gestion des utilisateurs",
-      "Validation des comptes",
-      "Rapports globaux"
-    ],
-    validation: "Accès restreint",
-    validationIcon: Shield,
-    validationColor: "text-red-600"
   }
 ]
 
@@ -158,7 +142,7 @@ export default function AccountSelectionPage() {
         </div>
 
         {/* Account Types Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {accountTypes.map((account) => {
             const IconComponent = account.icon
             const ValidationIcon = account.validationIcon
