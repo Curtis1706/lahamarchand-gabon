@@ -134,7 +134,7 @@ export function AppTopbar({ role, userName, userEmail }: TopbarProps) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={displayName} />
+                <AvatarImage src="/placeholder-user.jpg" alt={displayName} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   {displayName.charAt(0).toUpperCase()}
                 </AvatarFallback>

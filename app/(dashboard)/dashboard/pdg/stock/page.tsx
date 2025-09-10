@@ -139,6 +139,20 @@ interface StockData {
     stockStatus: "available" | "low" | "out"
   }>
   recentMovements: StockMovement[]
+  disciplines: Array<{
+    id: string
+    name: string
+  }>
+  authors: Array<{
+    id: string
+    name: string
+    email: string
+  }>
+  concepteurs: Array<{
+    id: string
+    name: string
+    email: string
+  }>
 }
 
 export default function PDGStockManagement() {

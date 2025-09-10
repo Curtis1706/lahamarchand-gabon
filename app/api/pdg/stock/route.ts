@@ -78,6 +78,41 @@ export async function GET(request: NextRequest) {
       take: 20
     })
 
+    // Récupérer toutes les disciplines disponibles
+    const disciplines = await prisma.discipline.findMany({
+      select: {
+        id: true,
+        name: true
+      },
+      orderBy: { name: "asc" }
+    })
+
+    // Récupérer tous les auteurs disponibles
+    const authors = await prisma.user.findMany({
+      where: {
+        role: "AUTHOR"
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true
+      },
+      orderBy: { name: "asc" }
+    })
+
+    // Récupérer tous les concepteurs disponibles
+    const concepteurs = await prisma.user.findMany({
+      where: {
+        role: "CONCEPTEUR"
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true
+      },
+      orderBy: { name: "asc" }
+    })
+
     const response = {
       works: works.map(work => ({
         id: work.id,
@@ -158,7 +193,10 @@ export async function GET(request: NextRequest) {
           discipline: movement.work.discipline.name,
           author: movement.work.author?.name || "Auteur inconnu"
         }
-      }))
+      })),
+      disciplines,
+      authors,
+      concepteurs
     }
 
     console.log("✅ Stock data prepared:", {

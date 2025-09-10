@@ -45,7 +45,7 @@ export default function ProfilPage() {
             <CardContent className="space-y-6">
               <div className="flex items-center gap-6">
                 <Avatar className="h-24 w-24">
-                  <AvatarImage src="/placeholder-avatar.jpg" />
+                  <AvatarImage src="/placeholder-user.jpg" />
                   <AvatarFallback className="text-2xl bg-primary text-primary-foreground">JD</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
