@@ -178,6 +178,7 @@ export default function GestionUtilisateursPage() {
   }
 
   const openDetailsDialog = (user: User) => {
+    console.log('👁️ Opening details dialog for user:', user.name, user.email)
     setSelectedUser(user)
     setIsDetailsDialogOpen(true)
   }
@@ -503,7 +504,12 @@ export default function GestionUtilisateursPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-1">
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => openDetailsDialog(user)}
+                              title="Voir les détails de l'utilisateur"
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
                             {user.role === "CONCEPTEUR" && !user.emailVerified && (
