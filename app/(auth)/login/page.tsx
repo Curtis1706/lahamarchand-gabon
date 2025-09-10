@@ -101,11 +101,6 @@ export default function LoginPage() {
               {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
-          <div className="mt-4 text-sm text-gray-600">
-            <p>Comptes de test :</p>
-            <p>• PDG: pdg@lahamarchand.com / password123</p>
-            <p>• Client: client@lahamarchand.com / password123</p>
-          </div>
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
               Pas encore de compte ?{" "}
