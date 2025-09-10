@@ -1322,11 +1322,11 @@ export default function PDGStockManagement() {
                       <SelectValue placeholder="Sélectionner une discipline" />
                     </SelectTrigger>
                     <SelectContent>
-                      {stockData?.disciplines.map((discipline) => (
+                      {stockData?.disciplines?.map((discipline) => (
                         <SelectItem key={discipline.id} value={discipline.id}>
                           {discipline.name}
                         </SelectItem>
-                      ))}
+                      )) || []}
                     </SelectContent>
                   </Select>
                 </div>
@@ -1340,11 +1340,11 @@ export default function PDGStockManagement() {
                       <SelectValue placeholder="Sélectionner un auteur" />
                     </SelectTrigger>
                     <SelectContent>
-                      {stockData?.authors.map((author) => (
+                      {stockData?.authors?.map((author) => (
                         <SelectItem key={author.id} value={author.id}>
                           {author.name}
                         </SelectItem>
-                      ))}
+                      )) || []}
                     </SelectContent>
                   </Select>
                 </div>
@@ -1358,11 +1358,11 @@ export default function PDGStockManagement() {
                       <SelectValue placeholder="Sélectionner un concepteur" />
                     </SelectTrigger>
                     <SelectContent>
-                      {stockData?.concepteurs.map((concepteur) => (
+                      {stockData?.concepteurs?.map((concepteur) => (
                         <SelectItem key={concepteur.id} value={concepteur.id}>
                           {concepteur.name}
                         </SelectItem>
-                      ))}
+                      )) || []}
                     </SelectContent>
                   </Select>
                 </div>

@@ -79,6 +79,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Récupérer toutes les disciplines disponibles
+    console.log("🔍 Fetching disciplines...")
     const disciplines = await prisma.discipline.findMany({
       select: {
         id: true,
@@ -86,11 +87,13 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { name: "asc" }
     })
+    console.log("✅ Disciplines found:", disciplines.length)
 
     // Récupérer tous les auteurs disponibles
+    console.log("🔍 Fetching authors...")
     const authors = await prisma.user.findMany({
       where: {
-        role: "AUTHOR"
+        role: "AUTEUR"
       },
       select: {
         id: true,
@@ -99,8 +102,10 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { name: "asc" }
     })
+    console.log("✅ Authors found:", authors.length)
 
     // Récupérer tous les concepteurs disponibles
+    console.log("🔍 Fetching concepteurs...")
     const concepteurs = await prisma.user.findMany({
       where: {
         role: "CONCEPTEUR"
@@ -112,6 +117,7 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { name: "asc" }
     })
+    console.log("✅ Concepteurs found:", concepteurs.length)
 
     const response = {
       works: works.map(work => ({
@@ -210,8 +216,19 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("❌ Error fetching stock data:", error)
+    
+    // Log plus détaillé de l'erreur
+    if (error instanceof Error) {
+      console.error("❌ Error name:", error.name)
+      console.error("❌ Error message:", error.message)
+      console.error("❌ Error stack:", error.stack)
+    }
+    
     return NextResponse.json(
-      { error: "Erreur lors du chargement des données de stock" },
+      { 
+        error: "Erreur lors du chargement des données de stock",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     )
   }
