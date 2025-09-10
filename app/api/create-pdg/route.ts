@@ -5,6 +5,17 @@ import { Role } from "@prisma/client"
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier la clé secrète pour sécuriser cette API
+    const authHeader = request.headers.get('authorization')
+    const secretKey = process.env.PDG_CREATION_SECRET || 'dev-secret-key'
+    
+    if (authHeader !== `Bearer ${secretKey}`) {
+      return NextResponse.json(
+        { error: "Accès non autorisé" },
+        { status: 401 }
+      )
+    }
+
     console.log('🏢 Création du compte PDG...')
     
     // Vérifier si un compte PDG existe déjà
@@ -17,7 +28,7 @@ export async function POST(request: NextRequest) {
         message: "Un compte PDG existe déjà",
         email: existingPDG.email,
         name: existingPDG.name,
-        password: "PDG2024!Secure"
+        loginUrl: "/pdg-login"
       })
     }
     
@@ -43,7 +54,8 @@ export async function POST(request: NextRequest) {
       email: pdgUser.email,
       name: pdgUser.name,
       password: password,
-      id: pdgUser.id
+      id: pdgUser.id,
+      loginUrl: "/pdg-login"
     })
     
   } catch (error) {

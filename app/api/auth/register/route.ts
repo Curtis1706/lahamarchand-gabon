@@ -46,6 +46,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Empêcher la création de comptes PDG via l'inscription publique
+    if (role.toUpperCase() === "PDG") {
+      return NextResponse.json(
+        { error: "Ce rôle ne peut pas être créé via l'inscription publique" },
+        { status: 403 }
+      )
+    }
+
     // Hacher le mot de passe
     const hashedPassword = await bcryptjs.hash(password, 10)
 
