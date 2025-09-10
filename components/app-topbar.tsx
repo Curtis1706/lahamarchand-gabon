@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -17,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, User, Settings, LogOut, Clock, Globe, Filter } from "lucide-react"
 import { NotificationBell } from "@/components/ui/notification-bell"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { useAuth } from "@/hooks/use-auth"
 
 interface TopbarProps {
   role: "pdg" | "representant" | "concepteur" | "auteur" | "partenaire" | "client" | "dga"
@@ -24,9 +27,28 @@ interface TopbarProps {
   userEmail?: string
 }
 
-export function AppTopbar({ role, userName = "Utilisateur", userEmail = "user@example.com" }: TopbarProps) {
+export function AppTopbar({ role, userName, userEmail }: TopbarProps) {
+  const { user } = useAuth()
+  const router = useRouter()
+  
+  // Utiliser les vraies données de l'utilisateur connecté
+  const displayName = user?.name || userName || "Utilisateur"
+  const displayEmail = user?.email || userEmail || "user@example.com"
+  const displayRole = user?.role?.toLowerCase() || role
   const [currentTime, setCurrentTime] = useState(new Date())
   const [selectedLanguage, setSelectedLanguage] = useState("fr")
+
+  // Fonction de déconnexion
+  const handleLogout = async () => {
+    try {
+      await signOut({ 
+        callbackUrl: "/login",
+        redirect: true 
+      })
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion:", error)
+    }
+  }
 
   // Update time every minute
   useState(() => {
@@ -112,9 +134,9 @@ export function AppTopbar({ role, userName = "Utilisateur", userEmail = "user@ex
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder-avatar.jpg" alt={userName} />
+                <AvatarImage src="/placeholder-avatar.jpg" alt={displayName} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                  {userName.charAt(0).toUpperCase()}
+                  {displayName.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -122,24 +144,27 @@ export function AppTopbar({ role, userName = "Utilisateur", userEmail = "user@ex
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{userName}</p>
-                <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
+                <p className="text-sm font-medium leading-none">{displayName}</p>
+                <p className="text-xs leading-none text-muted-foreground">{displayEmail}</p>
                 <Badge variant="outline" className="w-fit text-xs capitalize">
-                  {role}
+                  {displayRole}
                 </Badge>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/profil")}>
               <User className="mr-2 h-4 w-4" />
               <span>Profil</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/profil")}>
               <Settings className="mr-2 h-4 w-4" />
               <span>Préférences</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
+            <DropdownMenuItem 
+              className="text-red-600 cursor-pointer"
+              onClick={handleLogout}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Se déconnecter</span>
             </DropdownMenuItem>
