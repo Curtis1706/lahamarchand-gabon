@@ -968,7 +968,7 @@ export default function PDGStockManagement() {
 
       {/* Dialog pour visualiser l'œuvre */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-4xl">
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Détails de l'Œuvre</DialogTitle>
             <DialogDescription>
@@ -979,7 +979,7 @@ export default function PDGStockManagement() {
           {selectedWork && (
             <div className="space-y-6">
               {/* Informations générales */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">Informations Générales</CardTitle>
@@ -1032,7 +1032,7 @@ export default function PDGStockManagement() {
               </div>
 
               {/* Informations sur les personnes */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg">Auteur</CardTitle>
@@ -1072,7 +1072,7 @@ export default function PDGStockManagement() {
                   <CardTitle className="text-lg">Paramètres de Stock</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div>
                       <Label className="text-sm font-medium">Stock Minimum</Label>
                       <p className="text-sm text-muted-foreground">{selectedWork.minStock} unités</p>
@@ -1206,7 +1206,7 @@ export default function PDGStockManagement() {
 
       {/* Modal de création d'article */}
       <Dialog open={isCreateArticleDialogOpen} onOpenChange={setIsCreateArticleDialogOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
@@ -1221,23 +1221,25 @@ export default function PDGStockManagement() {
             {/* Informations de base */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Informations de base</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="title">Titre de l'œuvre *</Label>
                   <Input
                     id="title"
-                    placeholder="Ex: Mathématiques Appliquées"
+                    placeholder="Ex: Mathématiques Appliquées - Tome 1 : Algèbre et Géométrie"
                     value={createArticleForm.title}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, title: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="isbn">ISBN</Label>
                   <Input
                     id="isbn"
-                    placeholder="Ex: 978-2-123456-78-9"
+                    placeholder="Ex: 978-2-123456-78-9 (optionnel - sera généré automatiquement si vide)"
                     value={createArticleForm.isbn}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, isbn: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
               </div>
@@ -1246,26 +1248,28 @@ export default function PDGStockManagement() {
             {/* Prix et TVA */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Prix et TVA</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="price">Prix (FCFA) *</Label>
                   <Input
                     id="price"
                     type="number"
-                    placeholder="Ex: 5000"
+                    placeholder="Ex: 5000 (prix de vente unitaire en francs CFA)"
                     value={createArticleForm.price}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, price: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="tva">TVA (%)</Label>
+                  <Label htmlFor="tva">TVA (décimal)</Label>
                   <Input
                     id="tva"
                     type="number"
                     step="0.01"
-                    placeholder="Ex: 0.18"
+                    placeholder="Ex: 0.18 (18% de TVA - par défaut si vide)"
                     value={createArticleForm.tva}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, tva: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
               </div>
@@ -1274,15 +1278,16 @@ export default function PDGStockManagement() {
             {/* Stock */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Gestion du stock</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="stock">Stock initial *</Label>
                   <Input
                     id="stock"
                     type="number"
-                    placeholder="Ex: 100"
+                    placeholder="Ex: 100 (quantité initiale en stock)"
                     value={createArticleForm.stock}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, stock: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1290,9 +1295,10 @@ export default function PDGStockManagement() {
                   <Input
                     id="minStock"
                     type="number"
-                    placeholder="Ex: 10"
+                    placeholder="Ex: 10 (seuil d'alerte stock faible)"
                     value={createArticleForm.minStock}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, minStock: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
                 <div className="space-y-2">
@@ -1300,9 +1306,10 @@ export default function PDGStockManagement() {
                   <Input
                     id="maxStock"
                     type="number"
-                    placeholder="Ex: 500"
+                    placeholder="Ex: 500 (stock maximum recommandé)"
                     value={createArticleForm.maxStock}
                     onChange={(e) => setCreateArticleForm(prev => ({ ...prev, maxStock: e.target.value }))}
+                    className="text-base"
                   />
                 </div>
               </div>
@@ -1311,15 +1318,15 @@ export default function PDGStockManagement() {
             {/* Discipline et responsables */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Discipline et responsables</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="discipline">Discipline *</Label>
                   <Select 
                     value={createArticleForm.disciplineId} 
                     onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, disciplineId: value }))}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner une discipline" />
+                    <SelectTrigger className="text-base">
+                      <SelectValue placeholder="Choisir la discipline de l'œuvre" />
                     </SelectTrigger>
                     <SelectContent>
                       {stockData?.disciplines?.map((discipline) => (
@@ -1331,13 +1338,13 @@ export default function PDGStockManagement() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="author">Auteur</Label>
+                  <Label htmlFor="author">Auteur (optionnel)</Label>
                   <Select 
                     value={createArticleForm.authorId} 
                     onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, authorId: value }))}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner un auteur" />
+                    <SelectTrigger className="text-base">
+                      <SelectValue placeholder="Choisir l'auteur de l'œuvre" />
                     </SelectTrigger>
                     <SelectContent>
                       {stockData?.authors?.map((author) => (
@@ -1349,13 +1356,13 @@ export default function PDGStockManagement() {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="concepteur">Concepteur</Label>
+                  <Label htmlFor="concepteur">Concepteur (optionnel)</Label>
                   <Select 
                     value={createArticleForm.concepteurId} 
                     onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, concepteurId: value }))}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner un concepteur" />
+                    <SelectTrigger className="text-base">
+                      <SelectValue placeholder="Choisir le concepteur de l'œuvre" />
                     </SelectTrigger>
                     <SelectContent>
                       {stockData?.concepteurs?.map((concepteur) => (
