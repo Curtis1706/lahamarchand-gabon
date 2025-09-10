@@ -86,6 +86,7 @@ export default function GestionUtilisateursPage() {
   const [refreshing, setRefreshing] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false)
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
   const [actionType, setActionType] = useState<"validate" | "suspend" | "activate" | "delete" | "change_role" | "create" | null>(null)
   const [selectedDiscipline, setSelectedDiscipline] = useState("")
   const [actionReason, setActionReason] = useState("")
@@ -174,6 +175,11 @@ export default function GestionUtilisateursPage() {
     setSelectedDiscipline("")
     setActionReason("")
     setNewRole("")
+  }
+
+  const openDetailsDialog = (user: User) => {
+    setSelectedUser(user)
+    setIsDetailsDialogOpen(true)
   }
 
   const handleAction = async () => {
@@ -689,7 +695,12 @@ export default function GestionUtilisateursPage() {
                           </TableCell>
                           <TableCell>
                             <div className="flex gap-1">
-                              <Button variant="outline" size="sm">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => openDetailsDialog(user)}
+                                title="Voir les détails de l'utilisateur"
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
                               {user.emailVerified ? (
@@ -959,6 +970,158 @@ export default function GestionUtilisateursPage() {
                   )}
                 </>
               )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de détails utilisateur */}
+      <Dialog open={isDetailsDialogOpen} onOpenChange={setIsDetailsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <User className="h-5 w-5" />
+              Détails de l'utilisateur
+            </DialogTitle>
+            <DialogDescription>
+              Informations complètes de {selectedUser?.name}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedUser && (
+            <div className="space-y-6">
+              {/* Informations personnelles */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  Informations personnelles
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Nom complet</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium">{selectedUser.name}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Email</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium">{selectedUser.email}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Rôle</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      {getRoleBadge(selectedUser.role)}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Statut</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      {getStatusBadge(selectedUser)}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Discipline</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium">
+                        {selectedUser.discipline?.name || "Aucune discipline assignée"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Date d'inscription</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium">
+                        {new Date(selectedUser.createdAt).toLocaleDateString('fr-FR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Activité */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  Activité
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Projets</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium text-2xl text-blue-600">{selectedUser._count.projects}</p>
+                      <p className="text-sm text-muted-foreground">projets créés</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Œuvres</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium text-2xl text-green-600">{selectedUser._count.works}</p>
+                      <p className="text-sm text-muted-foreground">œuvres publiées</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Informations de sécurité */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  Sécurité
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Email vérifié</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <div className="flex items-center gap-2">
+                        {selectedUser.emailVerified ? (
+                          <>
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <span className="text-green-600 font-medium">Vérifié</span>
+                          </>
+                        ) : (
+                          <>
+                            <XCircle className="h-4 w-4 text-red-600" />
+                            <span className="text-red-600 font-medium">Non vérifié</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-muted-foreground">Dernière activité</Label>
+                    <div className="p-3 bg-muted/50 rounded-md">
+                      <p className="font-medium">
+                        {new Date(selectedUser.createdAt).toLocaleDateString('fr-FR', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsDetailsDialogOpen(false)}>
+              Fermer
+            </Button>
+            <Button onClick={() => {
+              setIsDetailsDialogOpen(false)
+              openActionDialog(selectedUser, "change_role")
+            }}>
+              <Edit className="mr-2 h-4 w-4" />
+              Modifier
             </Button>
           </DialogFooter>
         </DialogContent>
