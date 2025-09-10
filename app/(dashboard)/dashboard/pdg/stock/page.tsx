@@ -1316,62 +1316,69 @@ export default function PDGStockManagement() {
             </div>
 
             {/* Discipline et responsables */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Discipline et responsables</h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="discipline">Discipline *</Label>
-                  <Select 
-                    value={createArticleForm.disciplineId} 
-                    onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, disciplineId: value }))}
-                  >
-                    <SelectTrigger className="text-base">
-                      <SelectValue placeholder="Choisir la discipline de l'œuvre" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {stockData?.disciplines?.map((discipline) => (
-                        <SelectItem key={discipline.id} value={discipline.id}>
-                          {discipline.name}
-                        </SelectItem>
-                      )) || []}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="author">Auteur (optionnel)</Label>
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Discipline et responsables</h3>
+              
+              {/* Discipline - Champ obligatoire en premier */}
+              <div className="space-y-3">
+                <Label htmlFor="discipline" className="text-base font-medium">Discipline *</Label>
+                <Select 
+                  value={createArticleForm.disciplineId} 
+                  onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, disciplineId: value }))}
+                >
+                  <SelectTrigger className="text-base h-12 border-2 focus:border-blue-500">
+                    <SelectValue placeholder="Sélectionner la discipline de l'œuvre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stockData?.disciplines?.map((discipline) => (
+                      <SelectItem key={discipline.id} value={discipline.id} className="text-base py-2">
+                        {discipline.name}
+                      </SelectItem>
+                    )) || []}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Auteur et Concepteur - Champs optionnels */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <Label htmlFor="author" className="text-base font-medium">Auteur</Label>
                   <Select 
                     value={createArticleForm.authorId} 
                     onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, authorId: value }))}
                   >
-                    <SelectTrigger className="text-base">
-                      <SelectValue placeholder="Choisir l'auteur de l'œuvre" />
+                    <SelectTrigger className="text-base h-12 border-2 focus:border-blue-500">
+                      <SelectValue placeholder="Sélectionner un auteur" />
                     </SelectTrigger>
                     <SelectContent>
                       {stockData?.authors?.map((author) => (
-                        <SelectItem key={author.id} value={author.id}>
+                        <SelectItem key={author.id} value={author.id} className="text-base py-2">
                           {author.name}
                         </SelectItem>
                       )) || []}
                     </SelectContent>
                   </Select>
+                  <p className="text-sm text-gray-500">Laissez vide si aucun auteur spécifique</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="concepteur">Concepteur (optionnel)</Label>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="concepteur" className="text-base font-medium">Concepteur</Label>
                   <Select 
                     value={createArticleForm.concepteurId} 
                     onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, concepteurId: value }))}
                   >
-                    <SelectTrigger className="text-base">
-                      <SelectValue placeholder="Choisir le concepteur de l'œuvre" />
+                    <SelectTrigger className="text-base h-12 border-2 focus:border-blue-500">
+                      <SelectValue placeholder="Sélectionner un concepteur" />
                     </SelectTrigger>
                     <SelectContent>
                       {stockData?.concepteurs?.map((concepteur) => (
-                        <SelectItem key={concepteur.id} value={concepteur.id}>
+                        <SelectItem key={concepteur.id} value={concepteur.id} className="text-base py-2">
                           {concepteur.name}
                         </SelectItem>
                       )) || []}
                     </SelectContent>
                   </Select>
+                  <p className="text-sm text-gray-500">Laissez vide si aucun concepteur spécifique</p>
                 </div>
               </div>
             </div>
