@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     // Construire les filtres
     const where: any = {
-      status: "ON_SALE" // Seuls les livres en vente
+      status: { in: ["ON_SALE", "PUBLISHED"] } // Livres en vente et publiés
     }
 
     if (search) {

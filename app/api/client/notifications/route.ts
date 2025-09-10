@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
     // Ajouter des notifications de nouveautés
     const recentWorks = await prisma.work.findMany({
       where: {
-        status: "ON_SALE",
+        status: { in: ["ON_SALE", "PUBLISHED"] },
         createdAt: {
           gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // -30 jours
         }

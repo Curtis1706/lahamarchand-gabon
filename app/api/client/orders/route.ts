@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
     const works = await prisma.work.findMany({
       where: {
         id: { in: workIds },
-        status: "ON_SALE"
+        status: { in: ["ON_SALE", "PUBLISHED"] }
       }
     })
 
