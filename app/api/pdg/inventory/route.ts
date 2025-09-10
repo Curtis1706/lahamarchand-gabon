@@ -143,16 +143,23 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Créer une notification pour l'auteur
-    await prisma.notification.create({
-      data: {
-        userId: work.authorId,
-        title: "Stock mis à jour",
-        message: `Le stock de votre œuvre "${work.title}" a été mis à jour: ${stock} exemplaires`,
-        type: "STOCK_UPDATE",
-        data: { workId, stock, action }
+    // Créer une notification pour l'auteur (si l'auteur existe)
+    if (work.authorId) {
+      try {
+        await prisma.notification.create({
+          data: {
+            userId: work.authorId,
+            title: "Stock mis à jour",
+            message: `Le stock de votre œuvre "${work.title}" a été mis à jour: ${stock} exemplaires`,
+            type: "STOCK_UPDATE",
+            data: JSON.stringify({ workId, stock, action })
+          }
+        })
+      } catch (notificationError) {
+        console.warn("⚠️ Could not create notification:", notificationError)
+        // Continue without failing the main operation
       }
-    })
+    }
 
     console.log(`✅ Work ${workId} stock updated to ${stock}`)
 
