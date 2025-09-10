@@ -152,6 +152,7 @@ export default function PDGStockManagement() {
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [isCreateArticleDialogOpen, setIsCreateArticleDialogOpen] = useState(false)
   const [selectedWork, setSelectedWork] = useState<Work | null>(null)
   const [movementForm, setMovementForm] = useState({
     type: "",
@@ -170,6 +171,18 @@ export default function PDGStockManagement() {
     price: "",
     tva: "",
     disciplineId: ""
+  })
+  const [createArticleForm, setCreateArticleForm] = useState({
+    title: "",
+    isbn: "",
+    price: "",
+    tva: "0.18",
+    stock: "",
+    minStock: "10",
+    maxStock: "",
+    disciplineId: "",
+    authorId: "",
+    concepteurId: ""
   })
 
   const fetchStockData = async () => {
@@ -235,6 +248,51 @@ export default function PDGStockManagement() {
       case "DAMAGED": return <AlertTriangle className="h-4 w-4 text-orange-600" />
       case "EXPIRED": return <Clock className="h-4 w-4 text-gray-600" />
       default: return <Package className="h-4 w-4 text-gray-600" />
+    }
+  }
+
+  const handleCreateArticle = async () => {
+    try {
+      console.log('📚 Creating new article:', createArticleForm)
+      
+      const response = await fetch('/api/pdg/stock/articles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(createArticleForm),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la création de l\'article')
+      }
+
+      const newArticle = await response.json()
+      console.log('✅ Article créé:', newArticle)
+      
+      // Réinitialiser le formulaire
+      setCreateArticleForm({
+        title: "",
+        isbn: "",
+        price: "",
+        tva: "0.18",
+        stock: "",
+        minStock: "10",
+        maxStock: "",
+        disciplineId: "",
+        authorId: "",
+        concepteurId: ""
+      })
+      
+      // Fermer la modal
+      setIsCreateArticleDialogOpen(false)
+      
+      // Rafraîchir les données
+      fetchStockData()
+      
+    } catch (error) {
+      console.error('❌ Erreur lors de la création de l\'article:', error)
+      setError(error instanceof Error ? error.message : 'Erreur inconnue')
     }
   }
 
@@ -459,7 +517,10 @@ export default function PDGStockManagement() {
             <Upload className="mr-2 h-4 w-4" />
             Importer
           </Button>
-          <Button size="sm">
+          <Button 
+            size="sm"
+            onClick={() => setIsCreateArticleDialogOpen(true)}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Nouvel article
           </Button>
@@ -1124,6 +1185,184 @@ export default function PDGStockManagement() {
             </Button>
             <Button onClick={handleEditSubmit}>
               Mettre à jour
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de création d'article */}
+      <Dialog open={isCreateArticleDialogOpen} onOpenChange={setIsCreateArticleDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              Créer un nouvel article
+            </DialogTitle>
+            <DialogDescription>
+              Ajouter un nouvel article au stock avec toutes les informations nécessaires
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Informations de base */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Informations de base</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Titre de l'œuvre *</Label>
+                  <Input
+                    id="title"
+                    placeholder="Ex: Mathématiques Appliquées"
+                    value={createArticleForm.title}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, title: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="isbn">ISBN</Label>
+                  <Input
+                    id="isbn"
+                    placeholder="Ex: 978-2-123456-78-9"
+                    value={createArticleForm.isbn}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, isbn: e.target.value }))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Prix et TVA */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Prix et TVA</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="price">Prix (FCFA) *</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    placeholder="Ex: 5000"
+                    value={createArticleForm.price}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, price: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tva">TVA (%)</Label>
+                  <Input
+                    id="tva"
+                    type="number"
+                    step="0.01"
+                    placeholder="Ex: 0.18"
+                    value={createArticleForm.tva}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, tva: e.target.value }))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Stock */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Gestion du stock</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="stock">Stock initial *</Label>
+                  <Input
+                    id="stock"
+                    type="number"
+                    placeholder="Ex: 100"
+                    value={createArticleForm.stock}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, stock: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="minStock">Stock minimum</Label>
+                  <Input
+                    id="minStock"
+                    type="number"
+                    placeholder="Ex: 10"
+                    value={createArticleForm.minStock}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, minStock: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="maxStock">Stock maximum</Label>
+                  <Input
+                    id="maxStock"
+                    type="number"
+                    placeholder="Ex: 500"
+                    value={createArticleForm.maxStock}
+                    onChange={(e) => setCreateArticleForm(prev => ({ ...prev, maxStock: e.target.value }))}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Discipline et responsables */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Discipline et responsables</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="discipline">Discipline *</Label>
+                  <Select 
+                    value={createArticleForm.disciplineId} 
+                    onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, disciplineId: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner une discipline" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stockData?.disciplines.map((discipline) => (
+                        <SelectItem key={discipline.id} value={discipline.id}>
+                          {discipline.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="author">Auteur</Label>
+                  <Select 
+                    value={createArticleForm.authorId} 
+                    onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, authorId: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un auteur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stockData?.authors.map((author) => (
+                        <SelectItem key={author.id} value={author.id}>
+                          {author.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="concepteur">Concepteur</Label>
+                  <Select 
+                    value={createArticleForm.concepteurId} 
+                    onValueChange={(value) => setCreateArticleForm(prev => ({ ...prev, concepteurId: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un concepteur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stockData?.concepteurs.map((concepteur) => (
+                        <SelectItem key={concepteur.id} value={concepteur.id}>
+                          {concepteur.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsCreateArticleDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleCreateArticle}>
+              <Plus className="mr-2 h-4 w-4" />
+              Créer l'article
             </Button>
           </DialogFooter>
         </DialogContent>
